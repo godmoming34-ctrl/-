@@ -15,6 +15,11 @@ using namespace std;
 int puzzlesSolved = 0;        // Количество решенных головоломок
 
 // ============================================================
+// СТАТИСТИКА ОТКРЫТЫХ КОМНАТ
+// ============================================================
+int openRoomsCount = 0;       // Количество открытых комнат
+
+// ============================================================
 // ВРЕМЯ В ИГРЕ
 // ============================================================
 time_t startTime;             // Время начала игры
@@ -114,12 +119,30 @@ string getGameTime() {
 }
 
 // ============================================================
-// ФУНКЦИЯ ПОКАЗА СТАТИСТИКИ (ГОЛОВОЛОМКИ + ВРЕМЯ)
+// ФУНКЦИЯ ПОДСЧЕТА ОТКРЫТЫХ КОМНАТ
 // ============================================================
-void showStats() {
+int countOpenRooms(const map<int, Location>& locations) {
+    int count = 0;
+    map<int, Location>::const_iterator it;
+    for (it = locations.begin(); it != locations.end(); it++) {
+        if (it->second.isOpen) {
+            count++;
+        }
+    }
+    return count;
+}
+
+// ============================================================
+// ФУНКЦИЯ ПОКАЗА СТАТИСТИКИ (ГОЛОВОЛОМКИ + ВРЕМЯ + КОМНАТЫ)
+// ============================================================
+void showStats(const map<int, Location>& locations) {
+    int totalRooms = locations.size();
+    int openRooms = countOpenRooms(locations);
+
     cout << "\n[СТАТИСТИКА]\n";
     cout << "========================================\n";
     cout << "  Решено головоломок: " << puzzlesSolved << "\n";
+    cout << "  Открыто комнат: " << openRooms << " из " << totalRooms << "\n";
     cout << "  Время в игре: " << getGameTime() << "\n";
     cout << "========================================\n";
 }
@@ -186,7 +209,7 @@ void showHelp() {
     cout << "  open         - решить головоломку\n";
     cout << "  look         - посмотреть локацию\n";
     cout << "  map          - показать карту\n";
-    cout << "  stats        - показать статистику (головоломки + время)\n";
+    cout << "  stats        - показать статистику (головоломки + комнаты + время)\n";
     cout << "  help         - показать помощь\n";
     cout << "  exit         - выйти\n";
     cout << "\n[ПОДСКАЗКА] Как пройти:\n";
@@ -249,7 +272,7 @@ void showInstructions() {
     cout << "  open         - решить головоломку\n";
     cout << "  look         - посмотреть локацию\n";
     cout << "  map          - показать карту\n";
-    cout << "  stats        - показать статистику (головоломки + время)\n";
+    cout << "  stats        - показать статистику (головоломки + комнаты + время)\n";
     cout << "  help         - показать помощь\n";
     cout << "  exit         - выйти\n";
     cout << "\n";
@@ -277,7 +300,7 @@ int main() {
     // Создаём локации
     map<int, Location> locations;
 
-    // Локация 0 - Вход
+    // Локация 0 - Вход (уже открыта)
     Location entrance;
     entrance.id = 0;
     entrance.name = "Вход в лабиринт";
@@ -300,7 +323,7 @@ int main() {
     entrance.hint = "";
     locations[0] = entrance;
 
-    // Локация 1 - Зал рун
+    // Локация 1 - Зал рун (закрыта)
     Location runeHall;
     runeHall.id = 1;
     runeHall.name = "Зал древних рун";
@@ -323,7 +346,7 @@ int main() {
     runeHall.hint = "На стене высечены числа...";
     locations[1] = runeHall;
 
-    // Локация 2 - Библиотека
+    // Локация 2 - Библиотека (закрыта)
     Location library;
     library.id = 2;
     library.name = "Библиотека теней";
@@ -346,7 +369,7 @@ int main() {
     library.hint = "Одна книга шепчет загадку...";
     locations[2] = library;
 
-    // Локация 3 - Выход
+    // Локация 3 - Выход (закрыта)
     Location exit;
     exit.id = 3;
     exit.name = "Выход!";
@@ -399,9 +422,13 @@ int main() {
             cout << "=========================================\n";
 
             // Показываем финальную статистику
+            int totalRooms = locations.size();
+            int openRooms = countOpenRooms(locations);
+
             cout << "\n[ФИНАЛЬНАЯ СТАТИСТИКА]\n";
             cout << "========================================\n";
             cout << "  Решено головоломок: " << puzzlesSolved << "\n";
+            cout << "  Открыто комнат: " << openRooms << " из " << totalRooms << "\n";
             cout << "  Время прохождения: " << getGameTime() << "\n";
             cout << "========================================\n";
 
@@ -425,7 +452,7 @@ int main() {
             showMap(locations, current);
         }
         else if (command == "stats") {
-            showStats();
+            showStats(locations);
         }
         else if (command == "open") {
             if (!locations[current].isOpen) {
@@ -507,9 +534,13 @@ int main() {
                 cout << "=========================================\n";
 
                 // Показываем финальную статистику
+                int totalRooms = locations.size();
+                int openRooms = countOpenRooms(locations);
+
                 cout << "\n[ФИНАЛЬНАЯ СТАТИСТИКА]\n";
                 cout << "========================================\n";
                 cout << "  Решено головоломок: " << puzzlesSolved << "\n";
+                cout << "  Открыто комнат: " << openRooms << " из " << totalRooms << "\n";
                 cout << "  Время прохождения: " << getGameTime() << "\n";
                 cout << "========================================\n";
 

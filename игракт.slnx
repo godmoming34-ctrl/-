@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="игракт/игракт.vcxproj" Id="c4b3b456-1c1b-4ea0-a106-fa84b11e14e3" />
+</Solution>
